@@ -1,4 +1,4 @@
-// pages/admin/projects.tsx
+// pages/admin/policies.tsx
 "use client"
 import { useState, useEffect, FormEvent } from 'react';
 import { 
@@ -34,39 +34,37 @@ import {
   AlertDescription 
 } from '@/components/ui/alert';
 import { toast } from '@/components/ui/use-toast';
-import { IProject } from '@/utils/interface';
-import { SingleImageDropzoneUsage } from '@/components/SingleImageDropzoneUsage';
+import { IPolicy } from '@/utils/interface';
 
-export default function AdminProjects() {
-  const [projects, setProjects] = useState<IProject[]>([]);
+export default function AdminProlicy() {
+  const [policies, setPolicies] = useState<IPolicy[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
   const [openAddDialog, setOpenAddDialog] = useState(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
+  const [policyToDelete, setPolicyToDelete] = useState<string | null>(null);
   
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [projectToEdit, setProjectToEdit] = useState<IProject | null>(null);
+  const [policyToEdit, setPolicyToEdit] = useState<IPolicy | null>(null);
   
   const [formData, setFormData] = useState({
-    name: '',
+    title: '',
     description: '',
-    image: '',
   });
 
-  // Fetch projects from API
-  const fetchProjects = async () => {
+  // Fetch policies from API
+  const fetchPolicies = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/projects');
+      const res = await fetch('/api/policies');
       const data = await res.json();
       if (data.success) {
-        setProjects(data.data);
+        setPolicies(data.data);
       } else {
         toast({
-          title: "Error loading projects",
-          description: data.message || "Failed to load projects",
+          title: "Error loading policies",
+          description: data.message || "Failed to load policies",
           variant: "destructive",
         });
       }
@@ -82,26 +80,25 @@ export default function AdminProjects() {
   };
 
   useEffect(() => {
-    fetchProjects();
+    fetchPolicies();
   }, []);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
   };
 
-  // Handle adding a project
+  // Handle adding a policy
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      const res = await fetch('/api/projects', {
+      const res = await fetch('/api/policies', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name,
+          title: formData.title,
           description: formData.description,
-          image: formData.image,
         }),
       });
       
@@ -110,15 +107,15 @@ export default function AdminProjects() {
       if (data.success) {
         toast({
           title: "Success",
-          description: "Project added successfully",
+          description: "Policy added successfully",
         });
-        fetchProjects();
-        setFormData({ name: '', description: '', image: ''});
+        fetchPolicies();
+        setFormData({ title: '', description: ''});
         setOpenAddDialog(false);
       } else {
         toast({
           title: "Error",
-          description: data.message || "Failed to add project",
+          description: data.message || "Failed to add policy",
           variant: "destructive",
         });
       }
@@ -133,19 +130,19 @@ export default function AdminProjects() {
     }
   };
 
-  // Handle confirming project deletion
+  // Handle confirming policy deletion
   const confirmDelete = (id: string) => {
-    setProjectToDelete(id);
+    setPolicyToDelete(id);
     setOpenDeleteDialog(true);
   };
 
-  // Handle deleting a project
+  // Handle deleting a policy
   const handleDelete = async () => {
-    if (projectToDelete === null) return;
+    if (policyToDelete === null) return;
     
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/projects/${projectToDelete}`, { 
+      const res = await fetch(`/api/policies/${policyToDelete}`, { 
         method: 'DELETE' 
       });
       
@@ -154,13 +151,13 @@ export default function AdminProjects() {
       if (data.success) {
         toast({
           title: "Success",
-          description: "Project deleted successfully",
+          description: "Policy deleted successfully",
         });
-        fetchProjects();
+        fetchPolicies();
       } else {
         toast({
           title: "Error",
-          description: data.message || "Failed to delete project",
+          description: data.message || "Failed to delete policy",
           variant: "destructive",
         });
       }
@@ -173,17 +170,17 @@ export default function AdminProjects() {
     } finally {
       setIsLoading(false);
       setOpenDeleteDialog(false);
-      setProjectToDelete(null);
+      setPolicyToDelete(null);
     }
   };
-// Handle editing a project
+// Handle editing a policy
 const handleEditSubmit = async (e: FormEvent) => {
   e.preventDefault();
-  if (!projectToEdit) return;
+  if (!policyToEdit) return;
   
   setIsLoading(true);
   try {
-    const res = await fetch(`/api/projects/${projectToEdit._id}`, {
+    const res = await fetch(`/api/policies/${policyToEdit._id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -196,14 +193,14 @@ const handleEditSubmit = async (e: FormEvent) => {
     if (data.success) {
       toast({
         title: "Success",
-        description: "Project updated successfully",
+        description: "Policy updated successfully",
       });
-      fetchProjects();
+      fetchPolicies();
       setOpenEditDialog(false);
     } else {
       toast({
         title: "Error",
-        description: data.message || "Failed to update project",
+        description: data.message || "Failed to update policy",
         variant: "destructive",
       });
     }
@@ -218,13 +215,12 @@ const handleEditSubmit = async (e: FormEvent) => {
   }
 };
 
-// Open edit dialog with project data
-const openEdit = (project: IProject) => {
-  setProjectToEdit(project);
+// Open edit dialog with policy data
+const openEdit = (policy: IPolicy) => {
+  setPolicyToEdit(policy);
   setFormData({
-    name: project.name,
-    description: project.description,
-    image: project.image,
+    title: policy.title,
+    description: policy.description,
   });
   setOpenEditDialog(true);
 };
@@ -232,24 +228,24 @@ const openEdit = (project: IProject) => {
   return (
     <div className="container mx-auto p-4 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Project Management</h1>
+        <h1 className="text-2xl font-bold">Policy Management</h1>
         <Button onClick={() => setOpenAddDialog(true)} variant="default">
-          <Plus className="mr-2 h-4 w-4" /> Add Project
+          <Plus className="mr-2 h-4 w-4" /> Add Policy
         </Button>
       </div>
 
-      {projects.length === 0 && !isLoading ? (
+      {policies.length === 0 && !isLoading ? (
         <Alert>
           <AlertDescription>
-            No projects found. Add your first project to get started.
+            No policies found. Add your first policy to get started.
           </AlertDescription>
         </Alert>
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Projects</CardTitle>
+            <CardTitle>Policies</CardTitle>
             <CardDescription>
-              Manage your project catalog with this interface.
+              Manage your policy catalog with this interface.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -257,47 +253,31 @@ const openEdit = (project: IProject) => {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Image</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Price</TableHead>
+                  <TableHead>Title</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {projects.map((project) => (
-                  <TableRow key={project._id}>
+                {policies.map((policy) => (
+                  <TableRow key={policy._id}>
                     <TableCell className="font-mono text-xs">
-                      {project._id.substring(0, 8)}...
+                      {policy._id.substring(0, 8)}...
                     </TableCell>
-                    <TableCell>
-                      {project.image && (
-                        <div className="h-12 w-12 rounded overflow-hidden">
-                          <img 
-                            src={project.image} 
-                            alt={project.name} 
-                            className="h-full w-full object-cover"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.src = "/api/placeholder/48/48";
-                            }}
-                          />
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="font-medium">{project.name}</TableCell>
+                   
+                    <TableCell className="font-medium">{policy.title}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => openEdit(project)}
+                          onClick={() => openEdit(policy)}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="destructive"
                           size="sm"
-                          onClick={() => confirmDelete(project._id)}
+                          onClick={() => confirmDelete(policy._id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -310,24 +290,24 @@ const openEdit = (project: IProject) => {
           </CardContent>
         </Card>
       )}
-    {/* Edit Project Dialog */}
+    {/* Edit Policy Dialog */}
     <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Project</DialogTitle>
+            <DialogTitle>Edit Policy</DialogTitle>
             <DialogDescription>
-              Update the details for this project.
+              Update the details for this policy.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleEditSubmit}>
             <div className="grid gap-4 py-4">
               {/* Same form fields as Add Dialog */}
               <div className="grid gap-2">
-                <Label htmlFor="name">Project Name</Label>
+                <Label htmlFor="title">Policy title</Label>
                 <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
                   required
                 />
               </div>
@@ -341,17 +321,7 @@ const openEdit = (project: IProject) => {
                   rows={3}
                 />
               </div>
-              <div className="grid gap-2">
-                {/* <Label htmlFor="image">Image URL</Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  required
-                /> */}
-                
-                <SingleImageDropzoneUsage onUploadSuccess={(url: string) => handleInputChange("image", url)} />
-              </div>
+               
               
             </div>
             <DialogFooter>
@@ -366,23 +336,23 @@ const openEdit = (project: IProject) => {
         </DialogContent>
       </Dialog>
 
-      {/* Add Project Dialog */}
+      {/* Add Policy Dialog */}
       <Dialog open={openAddDialog} onOpenChange={setOpenAddDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add New Project</DialogTitle>
+            <DialogTitle>Add New Policy</DialogTitle>
             <DialogDescription>
-              Enter the details for the new project below.
+              Enter the details for the new policy below.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Project Name</Label>
+                <Label htmlFor="title">Policy title</Label>
                 <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
                   required
                 />
               </div>
@@ -396,17 +366,7 @@ const openEdit = (project: IProject) => {
                   rows={3}
                 />
               </div>
-              <div className="grid gap-2">
-                {/* <Label htmlFor="image">Image URL</Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  required
-                /> */}
-                
-                <SingleImageDropzoneUsage onUploadSuccess={(url: string) => handleInputChange("image", url)} />
-              </div>
+              
               
             </div>
             <DialogFooter>
@@ -414,7 +374,7 @@ const openEdit = (project: IProject) => {
                 Cancel
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Adding..." : "Add Project"}
+                {isLoading ? "Adding..." : "Add Policy"}
               </Button>
             </DialogFooter>
           </form>
@@ -427,7 +387,7 @@ const openEdit = (project: IProject) => {
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this project? This action cannot be undone.
+              Are you sure you want to delete this policy? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

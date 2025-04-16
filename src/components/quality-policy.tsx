@@ -6,6 +6,45 @@ import Link from "next/link"
 import { CheckCircle, ChevronRight, Shield } from 'lucide-react'
 import { cn } from "@/lib/utils"
 
+// Text content configuration
+const textContent = {
+  badge: {
+    iconLabel: "Cam kết chất lượng",
+    title: "Chính sách chất lượng",
+    description: "Chúng tôi cam kết mang đến những sản phẩm thân thiện với môi trường, đạt tiêu chuẩn cao nhất về chất lượng và độ bền vững."
+  },
+  features: [
+    {
+      title: "Cam kết bền vững",
+      description: "Chúng tôi cam kết sử dụng nguyên liệu tái chế và có nguồn gốc bền vững, giảm thiểu tác động đến môi trường trong toàn bộ quy trình sản xuất."
+    },
+    {
+      title: "Tiêu chuẩn ngành",
+      description: "Sản phẩm của chúng tôi tuân thủ các tiêu chuẩn ngành nghiêm ngặt, được kiểm định và chứng nhận bởi các tổ chức uy tín trong và ngoài nước."
+    },
+    {
+      title: "Cải tiến liên tục",
+      description: "Chúng tôi không ngừng nghiên cứu và phát triển để cải tiến sản phẩm, áp dụng công nghệ mới nhằm nâng cao chất lượng và tính bền vững."
+    },
+    {
+      title: "Hài lòng khách hàng",
+      description: "Sự hài lòng của khách hàng là ưu tiên hàng đầu. Chúng tôi cam kết cung cấp sản phẩm chất lượng cao và dịch vụ khách hàng xuất sắc."
+    }
+  ],
+  isoBadge: {
+    title: "Tiêu chuẩn ISO",
+    description: "Đạt chứng nhận ISO 14001 về Hệ thống quản lý môi trường"
+  },
+  cta: {
+    label: "Tìm hiểu thêm",
+    href: "/quality-policy"
+  },
+  image: {
+    alt: "Cam kết chất lượng",
+    src: "/images/quality-policy.jpg"
+  }
+}
+
 export default function QualityPolicy() {
   const [isVisible, setIsVisible] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -19,19 +58,12 @@ export default function QualityPolicy() {
           observer.unobserve(entry.target)
         }
       },
-      {
-        threshold: 0.1,
-      }
+      { threshold: 0.1 }
     )
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current)
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current)
-      }
+      if (sectionRef.current) observer.unobserve(sectionRef.current)
     }
   }, [])
 
@@ -42,11 +74,7 @@ export default function QualityPolicy() {
     >
       {/* Background Pattern */}
       <div className="absolute inset-0 z-0 opacity-5">
-        <svg
-          width="100%"
-          height="100%"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern
               id="leaf-pattern"
@@ -71,13 +99,13 @@ export default function QualityPolicy() {
         <div className="mx-auto mb-12 max-w-xl text-center">
           <div className="mb-3 inline-flex items-center justify-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
             <Shield className="mr-1.5 h-4 w-4" />
-            Cam kết chất lượng
+            {textContent.badge.iconLabel}
           </div>
           <h2 className="mb-4 text-3xl font-bold tracking-tight text-gray-900 md:text-4xl">
-            Chính sách chất lượng
+            {textContent.badge.title}
           </h2>
           <p className="text-lg text-gray-600">
-            Chúng tôi cam kết mang đến những sản phẩm thân thiện với môi trường, đạt tiêu chuẩn cao nhất về chất lượng và độ bền vững.
+            {textContent.badge.description}
           </p>
         </div>
 
@@ -90,8 +118,8 @@ export default function QualityPolicy() {
             )}
           >
             <Image
-              src="/images/quality-policy.jpg"
-              alt="Cam kết chất lượng"
+              src={textContent.image.src}
+              alt={textContent.image.alt}
               fill
               className="object-cover"
             />
@@ -103,8 +131,12 @@ export default function QualityPolicy() {
                     <Shield className="h-6 w-6 text-green-600" />
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-lg font-semibold text-gray-900">Tiêu chuẩn ISO</h3>
-                    <p className="text-sm text-gray-600">Đạt chứng nhận ISO 14001 về Hệ thống quản lý môi trường</p>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      {textContent.isoBadge.title}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {textContent.isoBadge.description}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -119,60 +151,28 @@ export default function QualityPolicy() {
             )}
           >
             <div className="space-y-6">
-              <div className="flex">
-                <div className="mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
-                  <CheckCircle className="h-6 w-6 text-green-600" />
+              {textContent.features.map((feature, index) => (
+                <div className="flex" key={index}>
+                  <div className="mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
+                    <CheckCircle className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-900">Cam kết bền vững</h3>
-                  <p className="text-gray-600">
-                    Chúng tôi cam kết sử dụng nguyên liệu tái chế và có nguồn gốc bền vững, giảm thiểu tác động đến môi trường trong toàn bộ quy trình sản xuất.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex">
-                <div className="mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
-                  <CheckCircle className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-900">Tiêu chuẩn ngành</h3>
-                  <p className="text-gray-600">
-                    Sản phẩm của chúng tôi tuân thủ các tiêu chuẩn ngành nghiêm ngặt, được kiểm định và chứng nhận bởi các tổ chức uy tín trong và ngoài nước.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex">
-                <div className="mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
-                  <CheckCircle className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-900">Cải tiến liên tục</h3>
-                  <p className="text-gray-600">
-                    Chúng tôi không ngừng nghiên cứu và phát triển để cải tiến sản phẩm, áp dụng công nghệ mới nhằm nâng cao chất lượng và tính bền vững.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex">
-                <div className="mr-4 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
-                  <CheckCircle className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="mb-2 text-xl font-semibold text-gray-900">Hài lòng khách hàng</h3>
-                  <p className="text-gray-600">
-                    Sự hài lòng của khách hàng là ưu tiên hàng đầu. Chúng tôi cam kết cung cấp sản phẩm chất lượng cao và dịch vụ khách hàng xuất sắc.
-                  </p>
-                </div>
-              </div>
+              ))}
 
               <div className="pt-4">
                 <Link
-                  href="/quality-policy"
+                  href={textContent.cta.href}
                   className="group inline-flex items-center rounded-full bg-green-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-green-700"
                 >
-                  Tìm hiểu thêm
+                  {textContent.cta.label}
                   <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
@@ -183,4 +183,3 @@ export default function QualityPolicy() {
     </section>
   )
 }
-

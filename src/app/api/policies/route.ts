@@ -1,8 +1,8 @@
-// src/app/api/projects/route.ts
+// src/app/api/policies/route.ts
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/connectDB';
-import { Project } from '@/lib/models/Project';
-import { IProject } from '@/utils/interface';
+import { Policy } from '@/lib/models/Policy';
+import { IPolicy } from '@/utils/interface';
 
 type ApiResponse<T = any> = {
   success: boolean;
@@ -15,22 +15,18 @@ export async function GET(request: Request) {
   try {
     await connectDB();
     
-    // const { searchParams } = new URL(request.url);
-    // const page = Number(searchParams.get('page')) || 1;
-    // const limit = Number(searchParams.get('limit')) || 50;
-    // const skip = (page - 1) * limit;
-    const projects = await Project.find();
+    const policies = await Policy.find();
 
     return NextResponse.json({
       success: true,
-      data: projects,
+      data: policies,
     });
     
   } catch (error) {
-    console.error('Error getting projects:', error);
+    console.error('Error getting policies:', error);
     return NextResponse.json({
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to fetch projects'
+      message: error instanceof Error ? error.message : 'Failed to fetch policies'
     }, { status: 500 });
   }
 }
@@ -41,34 +37,33 @@ export async function POST(request: Request) {
     await connectDB();
     const body = await request.json();
     
-    const { name, description, image } = body;
+    const { title, description } = body;
     
-    if (!name || !description || !image) {
+    if (!title || !description) {
       return NextResponse.json({
         success: false,
-        message: 'All fields are required: name, description, image, price'
+        message: 'All fields are required: title, description'
       }, { status: 400 });
     }
 
-    const newProject = new Project({
-      name,
+    const newPolicy = new Policy({
+      title,
       description,
-      image,
     });
 
-    const savedProject = await newProject.save();
+    const savedPolicy = await newPolicy.save();
     
     return NextResponse.json({
       success: true,
-      data: savedProject,
-      message: 'Project added successfully'
+      data: savedPolicy,
+      message: 'Policy added successfully'
     }, { status: 201 });
     
   } catch (error) {
-    console.log('Error adding project:', error);
+    console.log('Error adding policy:', error);
     return NextResponse.json({
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to add project'
+      message: error instanceof Error ? error.message : 'Failed to add policy'
     }, { status: 500 });
   }
 }

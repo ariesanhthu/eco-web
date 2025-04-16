@@ -1,7 +1,7 @@
-// app/api/projects/[id]/route.ts
+// app/api/policies/[id]/route.ts
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/connectDB';
-import { Project } from '@/lib/models/Project';
+import { Policy } from '@/lib/models/Policy';
 import mongoose from 'mongoose';
 
 type ApiResponse<T = any> = {
@@ -10,7 +10,7 @@ type ApiResponse<T = any> = {
   message?: string;
 };
 
-// GET Single Project
+// GET Single Policy
 export async function GET(
   request: Request,
   context: any
@@ -23,42 +23,42 @@ export async function GET(
 
     if (!id || Array.isArray(id)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid project ID' },
+        { success: false, message: 'Invalid policy ID' },
         { status: 400 }
       );
     }
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid project ID format' },
+        { success: false, message: 'Invalid policy ID format' },
         { status: 400 }
       );
     }
 
-    const project = await Project.findById(id);
+    const policy = await Policy.findById(id);
     
-    if (!project) {
+    if (!policy) {
       return NextResponse.json(
-        { success: false, message: 'Project not found' },
+        { success: false, message: 'Policy not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true, data: project });
+    return NextResponse.json({ success: true, data: policy });
     
   } catch (error) {
-    console.error('Error getting project:', error);
+    console.error('Error getting policy:', error);
     return NextResponse.json(
       { 
         success: false, 
-        message: error instanceof Error ? error.message : 'Failed to fetch project' 
+        message: error instanceof Error ? error.message : 'Failed to fetch policy' 
       },
       { status: 500 }
     );
   }
 }
 
-// DELETE Project
+// DELETE Policy
 export async function DELETE(
   request: Request,
   context: any
@@ -71,37 +71,37 @@ export async function DELETE(
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid project ID' },
+        { success: false, message: 'Invalid policy ID' },
         { status: 400 }
       );
     }
 
-    const deletedProject = await Project.findByIdAndDelete(id);
+    const deletedPolicy = await Policy.findByIdAndDelete(id);
     
-    if (!deletedProject) {
+    if (!deletedPolicy) {
       return NextResponse.json(
-        { success: false, message: 'Project not found' },
+        { success: false, message: 'Policy not found' },
         { status: 404 }
       );
     }
 
     return NextResponse.json(
-      { success: true, message: 'Project deleted successfully' }
+      { success: true, message: 'Policy deleted successfully' }
     );
     
   } catch (error) {
-    console.error('Error deleting project:', error);
+    console.error('Error deleting policy:', error);
     return NextResponse.json(
       { 
         success: false, 
-        message: error instanceof Error ? error.message : 'Failed to delete project' 
+        message: error instanceof Error ? error.message : 'Failed to delete policy' 
       },
       { status: 500 }
     );
   }
 }
 
-// UPDATE Project
+// UPDATE Policy
 export async function PUT(
   request: Request,
   context: any
@@ -115,7 +115,7 @@ export async function PUT(
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid project ID' },
+        { success: false, message: 'Invalid policy ID' },
         { status: 400 }
       );
     }
@@ -130,31 +130,31 @@ export async function PUT(
       );
     }
 
-    const updatedProject = await Project.findByIdAndUpdate(
+    const updatedPolicy = await Policy.findByIdAndUpdate(
       id,
       { name, description, image },
       { new: true, runValidators: true }
     );
     
-    if (!updatedProject) {
+    if (!updatedPolicy) {
       return NextResponse.json(
-        { success: false, message: 'Project not found' },
+        { success: false, message: 'Policy not found' },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: updatedProject,
-      message: 'Project updated successfully'
+      data: updatedPolicy,
+      message: 'Policy updated successfully'
     });
     
   } catch (error) {
-    console.error('Error updating project:', error);
+    console.error('Error updating policy:', error);
     return NextResponse.json(
       { 
         success: false, 
-        message: error instanceof Error ? error.message : 'Failed to update project' 
+        message: error instanceof Error ? error.message : 'Failed to update policy' 
       },
       { status: 500 }
     );

@@ -259,7 +259,6 @@ const openEdit = (project: IProject) => {
                   <TableHead>ID</TableHead>
                   <TableHead>Image</TableHead>
                   <TableHead>Name</TableHead>
-                  <TableHead>Price</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
