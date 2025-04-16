@@ -1,7 +1,7 @@
-// app/api/products/[id]/route.ts
+// app/api/projects/[id]/route.ts
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/connectDB';
-import { Product } from '@/lib/models/Product';
+import { Project } from '@/lib/models/Project';
 import mongoose from 'mongoose';
 
 type ApiResponse<T = any> = {
@@ -10,7 +10,7 @@ type ApiResponse<T = any> = {
   message?: string;
 };
 
-// GET Single Product
+// GET Single Project
 export async function GET(
   request: Request,
   context: any
@@ -18,144 +18,143 @@ export async function GET(
   {
   try {
     await connectDB();
-    // const { id } = params;
+
     const { id } = await context.params as {id : string};
 
     if (!id || Array.isArray(id)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid product ID' },
+        { success: false, message: 'Invalid project ID' },
         { status: 400 }
       );
     }
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid product ID format' },
+        { success: false, message: 'Invalid project ID format' },
         { status: 400 }
       );
     }
 
-    const product = await Product.findById(id);
+    const project = await Project.findById(id);
     
-    if (!product) {
+    if (!project) {
       return NextResponse.json(
-        { success: false, message: 'Product not found' },
+        { success: false, message: 'Project not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true, data: product });
+    return NextResponse.json({ success: true, data: project });
     
   } catch (error) {
-    console.error('Error getting product:', error);
+    console.error('Error getting project:', error);
     return NextResponse.json(
       { 
         success: false, 
-        message: error instanceof Error ? error.message : 'Failed to fetch product' 
+        message: error instanceof Error ? error.message : 'Failed to fetch project' 
       },
       { status: 500 }
     );
   }
 }
 
-// DELETE Product
+// DELETE Project
 export async function DELETE(
   request: Request,
   context: any
   ): Promise<Response> {
     try {
-      await connectDB();
-      // { params }: { params: { id: string } }
+
+    await connectDB();
+
     const { id } = await context.params as {id : string};
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid product ID' },
+        { success: false, message: 'Invalid project ID' },
         { status: 400 }
       );
     }
 
-    const deletedProduct = await Product.findByIdAndDelete(id);
+    const deletedProject = await Project.findByIdAndDelete(id);
     
-    if (!deletedProduct) {
+    if (!deletedProject) {
       return NextResponse.json(
-        { success: false, message: 'Product not found' },
+        { success: false, message: 'Project not found' },
         { status: 404 }
       );
     }
 
     return NextResponse.json(
-      { success: true, message: 'Product deleted successfully' }
+      { success: true, message: 'Project deleted successfully' }
     );
     
   } catch (error) {
-    console.error('Error deleting product:', error);
+    console.error('Error deleting project:', error);
     return NextResponse.json(
       { 
         success: false, 
-        message: error instanceof Error ? error.message : 'Failed to delete product' 
+        message: error instanceof Error ? error.message : 'Failed to delete project' 
       },
       { status: 500 }
     );
   }
 }
 
-// UPDATE Product
+// UPDATE Project
 export async function PUT(
   request: Request,
-  // { params }: { params: { id: string } }
   context: any
   ): Promise<Response> {
   try {
     await connectDB();
-    // const { id } = params;
     const { id } = await context.params as {id : string};
     
     const body = await request.json();
-    const { name, description, image, price } = body;
+    const { name, description, image } = body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        { success: false, message: 'Invalid product ID' },
+        { success: false, message: 'Invalid project ID' },
         { status: 400 }
       );
     }
 
-    if (!name || !description || !image || !price) {
+    if (!name || !description || !image) {
       return NextResponse.json(
         { 
           success: false, 
-          message: 'All fields are required: name, description, image, price' 
+          message: 'All fields are required: name, description, image' 
         },
         { status: 400 }
       );
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(
+    const updatedProject = await Project.findByIdAndUpdate(
       id,
-      { name, description, image, price },
+      { name, description, image },
       { new: true, runValidators: true }
     );
     
-    if (!updatedProduct) {
+    if (!updatedProject) {
       return NextResponse.json(
-        { success: false, message: 'Product not found' },
+        { success: false, message: 'Project not found' },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      data: updatedProduct,
-      message: 'Product updated successfully'
+      data: updatedProject,
+      message: 'Project updated successfully'
     });
     
   } catch (error) {
-    console.error('Error updating product:', error);
+    console.error('Error updating project:', error);
     return NextResponse.json(
       { 
         success: false, 
-        message: error instanceof Error ? error.message : 'Failed to update product' 
+        message: error instanceof Error ? error.message : 'Failed to update project' 
       },
       { status: 500 }
     );

@@ -4,9 +4,8 @@ import { IProject } from "@/utils/interface";
 // Schema cho Project
 const ProjectSchema = new Schema<IProject>(
   {
-    id: { type: Number, required: true, unique: true },
     name: { type: String, required: true },
-    description: { type: String },
+    description: { type: String, required: false },
     image: { type: String, required: true },
   }
 );

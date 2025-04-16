@@ -35,6 +35,7 @@ import {
 } from '@/components/ui/alert';
 import { toast } from '@/components/ui/use-toast';
 import { IProject } from '@/utils/interface';
+import { SingleImageDropzoneUsage } from '@/components/SingleImageDropzoneUsage';
 
 export default function AdminProjects() {
   const [projects, setProjects] = useState<IProject[]>([]);
@@ -341,13 +342,15 @@ const openEdit = (project: IProject) => {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="image">Image URL</Label>
+                {/* <Label htmlFor="image">Image URL</Label>
                 <Input
                   id="image"
                   value={formData.image}
                   onChange={(e) => handleInputChange('image', e.target.value)}
                   required
-                />
+                /> */}
+                
+                <SingleImageDropzoneUsage onUploadSuccess={(url: string) => handleInputChange("image", url)} />
               </div>
               
             </div>
@@ -394,13 +397,15 @@ const openEdit = (project: IProject) => {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="image">Image URL</Label>
+                {/* <Label htmlFor="image">Image URL</Label>
                 <Input
                   id="image"
                   value={formData.image}
                   onChange={(e) => handleInputChange('image', e.target.value)}
                   required
-                />
+                /> */}
+                
+                <SingleImageDropzoneUsage onUploadSuccess={(url: string) => handleInputChange("image", url)} />
               </div>
               
             </div>

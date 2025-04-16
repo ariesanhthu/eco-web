@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { EdgeStoreProvider } from '../lib/edgestore';
-
+import Navbar from "@/components/Navbar";
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
 //   subsets: ["latin"],
@@ -30,7 +30,9 @@ export default function RootLayout({
       <body
         className={inter.className}
       >
-          <EdgeStoreProvider>{children}</EdgeStoreProvider>
+          <EdgeStoreProvider>
+            <Navbar />{children}
+          </EdgeStoreProvider>
       </body>
     </html>
   );

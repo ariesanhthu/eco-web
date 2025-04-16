@@ -1,8 +1,8 @@
-// src/app/api/products/route.ts
+// src/app/api/projects/route.ts
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/connectDB';
-import { Product } from '@/lib/models/Product';
-import { IProduct } from '@/utils/interface';
+import { Project } from '@/lib/models/Project';
+import { IProject } from '@/utils/interface';
 
 type ApiResponse<T = any> = {
   success: boolean;
@@ -15,29 +15,22 @@ export async function GET(request: Request) {
   try {
     await connectDB();
     
-    const { searchParams } = new URL(request.url);
-    const page = Number(searchParams.get('page')) || 1;
-    const limit = Number(searchParams.get('limit')) || 50;
-    const skip = (page - 1) * limit;
-
-    const filter = {};
-    const total = await Product.countDocuments(filter);
-    
-    const products = await Product.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+    // const { searchParams } = new URL(request.url);
+    // const page = Number(searchParams.get('page')) || 1;
+    // const limit = Number(searchParams.get('limit')) || 50;
+    // const skip = (page - 1) * limit;
+    const projects = await Project.find();
 
     return NextResponse.json({
       success: true,
-      data: products,
+      data: projects,
     });
     
   } catch (error) {
-    console.error('Error getting products:', error);
+    console.error('Error getting projects:', error);
     return NextResponse.json({
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to fetch products'
+      message: error instanceof Error ? error.message : 'Failed to fetch projects'
     }, { status: 500 });
   }
 }
@@ -48,35 +41,34 @@ export async function POST(request: Request) {
     await connectDB();
     const body = await request.json();
     
-    const { name, description, image, price } = body;
+    const { name, description, image } = body;
     
-    if (!name || !description || !image || !price) {
+    if (!name || !description || !image) {
       return NextResponse.json({
         success: false,
         message: 'All fields are required: name, description, image, price'
       }, { status: 400 });
     }
 
-    const newProduct = new Product({
+    const newProject = new Project({
       name,
       description,
       image,
-      price
     });
 
-    const savedProduct = await newProduct.save();
+    const savedProject = await newProject.save();
     
     return NextResponse.json({
       success: true,
-      data: savedProduct,
-      message: 'Product added successfully'
+      data: savedProject,
+      message: 'Project added successfully'
     }, { status: 201 });
     
   } catch (error) {
-    console.error('Error adding product:', error);
+    console.log('Error adding project:', error);
     return NextResponse.json({
       success: false,
-      message: error instanceof Error ? error.message : 'Failed to add product'
+      message: error instanceof Error ? error.message : 'Failed to add project'
     }, { status: 500 });
   }
 }
