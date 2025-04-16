@@ -12,8 +12,8 @@ export interface IProduct extends Document {
   
 // Interface cho Project
 export interface IProject extends Document {
-    id: number;
-    title: string;
+    _id: string;
+    name: string;
     description: string;
     image: string;
   }

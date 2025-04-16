@@ -1,4 +1,4 @@
-// pages/admin/products.tsx
+// pages/admin/projects.tsx
 "use client"
 import { useState, useEffect, FormEvent } from 'react';
 import { 
@@ -34,43 +34,38 @@ import {
   AlertDescription 
 } from '@/components/ui/alert';
 import { toast } from '@/components/ui/use-toast';
-import { IProduct } from '@/utils/interface';
-import { SingleImageDropzoneUsage } from '@/components/SingleImageDropzoneUsage';
+import { IProject } from '@/utils/interface';
 
-export default function AdminProducts() {
-  // --- UPLOAD IMAGE ---- 
-  // const [ImageUrl, setUrl] = useState<string>("");
-
-  const [products, setProducts] = useState<IProduct[]>([]);
+export default function AdminProjects() {
+  const [projects, setProjects] = useState<IProject[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
   const [openAddDialog, setOpenAddDialog] = useState(false);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
   
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [productToEdit, setProductToEdit] = useState<IProduct | null>(null);
+  const [projectToEdit, setProjectToEdit] = useState<IProject | null>(null);
   
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     image: '',
-    price: '',
   });
 
-  // Fetch products from API
-  const fetchProducts = async () => {
+  // Fetch projects from API
+  const fetchProjects = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/products');
+      const res = await fetch('/api/projects');
       const data = await res.json();
       if (data.success) {
-        setProducts(data.data);
+        setProjects(data.data);
       } else {
         toast({
-          title: "Error loading products",
-          description: data.message || "Failed to load products",
+          title: "Error loading projects",
+          description: data.message || "Failed to load projects",
           variant: "destructive",
         });
       }
@@ -86,27 +81,26 @@ export default function AdminProducts() {
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchProjects();
   }, []);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
   };
 
-  // Handle adding a product
+  // Handle adding a project
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      const res = await fetch('/api/products', {
+      const res = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           description: formData.description,
           image: formData.image,
-          price: formData.price,
         }),
       });
       
@@ -115,15 +109,15 @@ export default function AdminProducts() {
       if (data.success) {
         toast({
           title: "Success",
-          description: "Product added successfully",
+          description: "Project added successfully",
         });
-        fetchProducts();
-        setFormData({ name: '', description: '', image: '', price: '' });
+        fetchProjects();
+        setFormData({ name: '', description: '', image: ''});
         setOpenAddDialog(false);
       } else {
         toast({
           title: "Error",
-          description: data.message || "Failed to add product",
+          description: data.message || "Failed to add project",
           variant: "destructive",
         });
       }
@@ -138,19 +132,19 @@ export default function AdminProducts() {
     }
   };
 
-  // Handle confirming product deletion
+  // Handle confirming project deletion
   const confirmDelete = (id: string) => {
-    setProductToDelete(id);
+    setProjectToDelete(id);
     setOpenDeleteDialog(true);
   };
 
-  // Handle deleting a product
+  // Handle deleting a project
   const handleDelete = async () => {
-    if (productToDelete === null) return;
+    if (projectToDelete === null) return;
     
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/products/${productToDelete}`, { 
+      const res = await fetch(`/api/projects/${projectToDelete}`, { 
         method: 'DELETE' 
       });
       
@@ -159,13 +153,13 @@ export default function AdminProducts() {
       if (data.success) {
         toast({
           title: "Success",
-          description: "Product deleted successfully",
+          description: "Project deleted successfully",
         });
-        fetchProducts();
+        fetchProjects();
       } else {
         toast({
           title: "Error",
-          description: data.message || "Failed to delete product",
+          description: data.message || "Failed to delete project",
           variant: "destructive",
         });
       }
@@ -178,22 +172,21 @@ export default function AdminProducts() {
     } finally {
       setIsLoading(false);
       setOpenDeleteDialog(false);
-      setProductToDelete(null);
+      setProjectToDelete(null);
     }
   };
-// Handle editing a product
+// Handle editing a project
 const handleEditSubmit = async (e: FormEvent) => {
   e.preventDefault();
-  if (!productToEdit) return;
+  if (!projectToEdit) return;
   
   setIsLoading(true);
   try {
-    const res = await fetch(`/api/products/${productToEdit._id}`, {
+    const res = await fetch(`/api/projects/${projectToEdit._id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...formData,
-        price: Number(formData.price)
       }),
     });
     
@@ -202,14 +195,14 @@ const handleEditSubmit = async (e: FormEvent) => {
     if (data.success) {
       toast({
         title: "Success",
-        description: "Product updated successfully",
+        description: "Project updated successfully",
       });
-      fetchProducts();
+      fetchProjects();
       setOpenEditDialog(false);
     } else {
       toast({
         title: "Error",
-        description: data.message || "Failed to update product",
+        description: data.message || "Failed to update project",
         variant: "destructive",
       });
     }
@@ -224,14 +217,13 @@ const handleEditSubmit = async (e: FormEvent) => {
   }
 };
 
-// Open edit dialog with product data
-const openEdit = (product: IProduct) => {
-  setProductToEdit(product);
+// Open edit dialog with project data
+const openEdit = (project: IProject) => {
+  setProjectToEdit(project);
   setFormData({
-    name: product.name,
-    description: product.description,
-    image: product.image,
-    price: product.price.toString(),
+    name: project.name,
+    description: project.description,
+    image: project.image,
   });
   setOpenEditDialog(true);
 };
@@ -239,24 +231,24 @@ const openEdit = (product: IProduct) => {
   return (
     <div className="container mx-auto p-4 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Product Management</h1>
+        <h1 className="text-2xl font-bold">Project Management</h1>
         <Button onClick={() => setOpenAddDialog(true)} variant="default">
-          <Plus className="mr-2 h-4 w-4" /> Add Product
+          <Plus className="mr-2 h-4 w-4" /> Add Project
         </Button>
       </div>
 
-      {products.length === 0 && !isLoading ? (
+      {projects.length === 0 && !isLoading ? (
         <Alert>
           <AlertDescription>
-            No products found. Add your first product to get started.
+            No projects found. Add your first project to get started.
           </AlertDescription>
         </Alert>
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Products</CardTitle>
+            <CardTitle>Projects</CardTitle>
             <CardDescription>
-              Manage your product catalog with this interface.
+              Manage your project catalog with this interface.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -271,17 +263,17 @@ const openEdit = (product: IProduct) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {products.map((product) => (
-                  <TableRow key={product._id}>
+                {projects.map((project) => (
+                  <TableRow key={project._id}>
                     <TableCell className="font-mono text-xs">
-                      {product._id.substring(0, 8)}...
+                      {project._id.substring(0, 8)}...
                     </TableCell>
                     <TableCell>
-                      {product.image && (
+                      {project.image && (
                         <div className="h-12 w-12 rounded overflow-hidden">
                           <img 
-                            src={product.image} 
-                            alt={product.name} 
+                            src={project.image} 
+                            alt={project.name} 
                             className="h-full w-full object-cover"
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
@@ -291,21 +283,20 @@ const openEdit = (product: IProduct) => {
                         </div>
                       )}
                     </TableCell>
-                    <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell>{product.price}</TableCell>
+                    <TableCell className="font-medium">{project.name}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => openEdit(product)}
+                          onClick={() => openEdit(project)}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="destructive"
                           size="sm"
-                          onClick={() => confirmDelete(product._id)}
+                          onClick={() => confirmDelete(project._id)}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -318,20 +309,20 @@ const openEdit = (product: IProduct) => {
           </CardContent>
         </Card>
       )}
-    {/* Edit Product Dialog */}
+    {/* Edit Project Dialog */}
     <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Product</DialogTitle>
+            <DialogTitle>Edit Project</DialogTitle>
             <DialogDescription>
-              Update the details for this product.
+              Update the details for this project.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleEditSubmit}>
             <div className="grid gap-4 py-4">
               {/* Same form fields as Add Dialog */}
               <div className="grid gap-2">
-                <Label htmlFor="name">Product Name</Label>
+                <Label htmlFor="name">Project Name</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -351,26 +342,14 @@ const openEdit = (product: IProduct) => {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="image">Image URL</Label>
-                {/* <Input
+                <Input
                   id="image"
                   value={formData.image}
                   onChange={(e) => handleInputChange('image', e.target.value)}
                   required
-                /> */}
-                {/* Pass handleInputChange cho trường image */}
-                <SingleImageDropzoneUsage onUploadSuccess={(url: string) => handleInputChange("image", url)} />
-     
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="price">Price</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => handleInputChange('price', e.target.value)}
-                  required
                 />
               </div>
+              
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setOpenEditDialog(false)}>
@@ -384,19 +363,19 @@ const openEdit = (product: IProduct) => {
         </DialogContent>
       </Dialog>
 
-      {/* Add Product Dialog */}
+      {/* Add Project Dialog */}
       <Dialog open={openAddDialog} onOpenChange={setOpenAddDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add New Product</DialogTitle>
+            <DialogTitle>Add New Project</DialogTitle>
             <DialogDescription>
-              Enter the details for the new product below.
+              Enter the details for the new project below.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Product Name</Label>
+                <Label htmlFor="name">Project Name</Label>
                 <Input
                   id="name"
                   value={formData.name}
@@ -415,7 +394,6 @@ const openEdit = (product: IProduct) => {
                 />
               </div>
               <div className="grid gap-2">
-              {/* 
                 <Label htmlFor="image">Image URL</Label>
                 <Input
                   id="image"
@@ -423,25 +401,15 @@ const openEdit = (product: IProduct) => {
                   onChange={(e) => handleInputChange('image', e.target.value)}
                   required
                 />
-              */}
-                <SingleImageDropzoneUsage onUploadSuccess={(url: string) => handleInputChange("image", url)} />
-              </div> 
-              <div className="grid gap-2">
-                <Label htmlFor="price">Price</Label>
-                <Input
-                  id="price"
-                  value={formData.price}
-                  onChange={(e) => handleInputChange('price', e.target.value)}
-                  required
-                />
               </div>
+              
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setOpenAddDialog(false)}>
                 Cancel
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Adding..." : "Add Product"}
+                {isLoading ? "Adding..." : "Add Project"}
               </Button>
             </DialogFooter>
           </form>
@@ -454,7 +422,7 @@ const openEdit = (product: IProduct) => {
           <DialogHeader>
             <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this product? This action cannot be undone.
+              Are you sure you want to delete this project? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
