@@ -8,22 +8,22 @@ import { IProject } from "@/utils/interface";
 // Sample projects data
 const projects = [
   {
-    id: 1,
-    title: "Dự án trồng rừng Tây Nguyên",
+    _id: 1,
+    name: "Dự án trồng rừng Tây Nguyên",
     description:
       "Dự án trồng 10,000 cây xanh tại khu vực Tây Nguyên, góp phần phục hồi hệ sinh thái và chống biến đổi khí hậu.",
     image: "/images/project-1.jpg",
   },
   {
-    id: 2,
-    title: "Hệ thống xử lý nước thải sinh học",
+    _id: 2,
+    name: "Hệ thống xử lý nước thải sinh học",
     description:
       "Thiết kế và xây dựng hệ thống xử lý nước thải sinh học cho khu công nghiệp, giúp giảm thiểu ô nhiễm môi trường.",
     image: "/images/project-2.jpg",
   },
   {
-    id: 3,
-    title: "Chương trình tái chế rác thải nhựa",
+    _id: 3,
+    name: "Chương trình tái chế rác thải nhựa",
     description:
       "Triển khai chương trình thu gom và tái chế rác thải nhựa tại các trường học, nâng cao ý thức bảo vệ môi trường.",
     image: "/images/project-3.jpg",
