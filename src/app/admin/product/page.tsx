@@ -351,13 +351,6 @@ const openEdit = (product: IProduct) => {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="image">Image URL</Label>
-                {/* <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  required
-                /> */}
-                {/* Pass handleInputChange cho trường image */}
                 <SingleImageDropzoneUsage onUploadSuccess={(url: string) => handleInputChange("image", url)} />
      
               </div>
@@ -415,15 +408,6 @@ const openEdit = (product: IProduct) => {
                 />
               </div>
               <div className="grid gap-2">
-              {/* 
-                <Label htmlFor="image">Image URL</Label>
-                <Input
-                  id="image"
-                  value={formData.image}
-                  onChange={(e) => handleInputChange('image', e.target.value)}
-                  required
-                />
-              */}
                 <SingleImageDropzoneUsage onUploadSuccess={(url: string) => handleInputChange("image", url)} />
               </div> 
               <div className="grid gap-2">

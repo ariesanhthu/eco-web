@@ -1,17 +1,18 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
-// const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)'])
+import type { NextRequest } from 'next/server';
 
-// export default clerkMiddleware(async (auth, request) => {
-//   if (!isPublicRoute(request)) {
-//     await auth.protect()
-//   }
-// })
-// const isProtectedRoute = createRouteMatcher(['/admin(.*)'])
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return response;
+}
 
-// export default clerkMiddleware(async (auth, req) => {
-//   if (isProtectedRoute(req)) await auth.protect()
-// })
+// export const config = {
+//   matcher: '/api/:path*', // Áp dụng middleware cho tất cả API routes
+// };
 
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 
@@ -30,5 +31,6 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
     // '/:path*'
+    '/api/:path*',
   ],
 }
