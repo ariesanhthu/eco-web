@@ -11,7 +11,8 @@ import {
 import FeaturedProducts from "@/components/featured-products";
 import ProjectsCarousel from "@/components/projects-carousel";
 import SocialLinks from "@/components/social-links";
-
+import Navbar from "@/components/Navbar";
+import QualityPolicy from "@/components/quality-policy";
 // Các biến chứa nội dung text
 const TEXT = {
   banner: {
@@ -88,6 +89,8 @@ const TEXT = {
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col">
+      <Navbar />
+
       {/* Banner/Message Section */}
       <section className="relative h-[80vh] min-h-[600px] w-full overflow-hidden">
         <div className="absolute inset-0">
@@ -118,7 +121,7 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-16" id="Services">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-3xl font-bold text-gray-800 md:text-4xl">
@@ -185,7 +188,7 @@ export default function Home() {
         </div>
       </section>
       {/* Projects Section */}
-      <section className="bg-white py-16">
+      <section className="bg-white py-16" id="Projects">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-3xl font-bold text-gray-800 md:text-4xl">
@@ -199,6 +202,9 @@ export default function Home() {
           <ProjectsCarousel />
         </div>
       </section>
+
+       {/* Quality Policy Section */}
+       <QualityPolicy />
 
       {/* Featured Products Section */}
       <section id="products" className="bg-gray-50 py-16">

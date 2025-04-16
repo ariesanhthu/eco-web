@@ -18,3 +18,10 @@ export interface IProject extends Document {
     image: string;
   }
   
+// Interface cho Project
+export interface IPolicy extends Document {
+    _id: string;
+    title: string;
+    description: string;
+  }
+  

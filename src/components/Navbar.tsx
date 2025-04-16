@@ -9,10 +9,31 @@ import { cn } from "@/lib/utils"
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import axios from "axios";
 
+import {
+    LayoutDashboard
+  } from "lucide-react";
+  
+import { checkRole } from '@/utils/roles'
+
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isProductsOpen, setIsProductsOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  const { isSignedIn } = useUser();
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const res = await axios.get("/api/check-role");
+        setIsAdmin(res.data.isAdmin);
+      } catch (error) {
+        console.error("Error fetching role:", error);
+      }
+    };
+
+    fetchRole();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -118,7 +139,7 @@ export default function Navbar() {
               )}
             </div>
             <Link
-              href="/services"
+              href="#Services"
               className={`px-3 py-2 text-sm font-medium transition-colors hover:text-green-600 ${
                 isScrolled ? "text-gray-700" : "text-white"
               }`}
@@ -126,7 +147,7 @@ export default function Navbar() {
               Dịch vụ
             </Link>
             <Link
-              href="/projects"
+              href="#Projects"
               className={`px-3 py-2 text-sm font-medium transition-colors hover:text-green-600 ${
                 isScrolled ? "text-gray-700" : "text-white"
               }`}
@@ -141,14 +162,7 @@ export default function Navbar() {
             >
               Blog
             </Link>
-            <Link
-              href="/contact"
-              className={`px-3 py-2 text-sm font-medium transition-colors hover:text-green-600 ${
-                isScrolled ? "text-gray-700" : "text-white"
-              }`}
-            >
-              Liên hệ
-            </Link>
+            
           </nav>
 
           {/* Desktop Right Actions */}
@@ -177,7 +191,32 @@ export default function Navbar() {
             >
               Liên hệ ngay
             </Link>
-          </div>
+            {!isSignedIn ? (
+                <div className="flex gap-4">
+                    <div className="rounded-full bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700">
+                        <SignUpButton signInFallbackRedirectUrl="/" fallbackRedirectUrl="/">
+                            Đăng nhập
+                        </SignUpButton>
+                    </div>
+                </div>
+                    ) : (
+                    <UserButton afterSignOutUrl="/">
+                        {/* KIỂM TRA TÀI KHOẢN */}
+                        {
+                            isAdmin ? (
+                            <UserButton.MenuItems>
+                            <UserButton.Link
+                                label="Quản lý trang"
+                                labelIcon={<LayoutDashboard fill="#3e9392" size={15} stroke="0"/>}
+                                href="/admin"
+                            />
+                            </UserButton.MenuItems>
+                            )  : null
+                        }
+                        
+                    </UserButton>
+                    )}
+            </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -244,14 +283,14 @@ export default function Navbar() {
                 )}
               </div>
               <Link
-                href="/services"
+                href="#Services"
                 className="px-4 py-2 text-gray-700 hover:bg-gray-100"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Dịch vụ
               </Link>
               <Link
-                href="/projects"
+                href="#Projects"
                 className="px-4 py-2 text-gray-700 hover:bg-gray-100"
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -293,6 +332,7 @@ export default function Navbar() {
                 >
                   Liên hệ ngay
                 </Link>
+                
               </div>
             </nav>
           </div>

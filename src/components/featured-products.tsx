@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { IProduct } from "@/utils/interface";
-
+import { formatCurrency } from "@/utils/currency";
 // Hàm helper để đảm bảo URL hợp lệ cho component Image
 function getImageUrl(url?: string): string {
   if (!url) return "/placeholder.svg";
@@ -82,9 +82,9 @@ export default function FeaturedProducts() {
               {product.name}
             </h3>
             <p className="mb-4 text-gray-600">{product.description}</p>
-            <div className="flex items-center justify-between">
+            <div className="flex item-center justify-between">
               <span className="text-lg font-bold text-green-600">
-                {product.price}
+                {formatCurrency(product.price)}
               </span>
               <Link
                 href="#"
