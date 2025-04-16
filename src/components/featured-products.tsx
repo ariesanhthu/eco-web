@@ -14,12 +14,36 @@ function getImageUrl(url?: string): string {
   // Nếu không, giả sử đó là đường dẫn tương đối và thêm '/' ở đầu
   return `/${url}`;
 }
+// Sample product data
+const products = [
+  {
+    _id: 1,
+    name: "Túi vải tự nhiên",
+    description: "Túi vải được làm từ bông hữu cơ 100%, thân thiện với môi trường và có thể tái sử dụng nhiều lần.",
+    image: "/images/product-1.jpg",
+    price: 150000,
+  },
+  {
+    _id: 2,
+    name: "Bình nước thủy tinh",
+    description: "Bình nước thủy tinh cao cấp, không chứa BPA, an toàn cho sức khỏe và thân thiện với môi trường.",
+    image: "/images/product-2.jpg",
+    price: 280000,
+  },
+  {
+    _id: 3,
+    name: "Ống hút tre tự nhiên",
+    description: "Ống hút làm từ tre tự nhiên, thay thế hoàn hảo cho ống hút nhựa, có thể phân hủy sinh học.",
+    image: "/images/product-3.jpg",
+    price: 75000,
+  },
+]
 
 export default function FeaturedProducts() {
   const [isVisible, setIsVisible] = useState(false);
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  // const [products, setProducts] = useState<IProduct[]>([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState("");
 
   // Hiệu ứng hiển thị (animation fade in)
   useEffect(() => {
@@ -30,34 +54,33 @@ export default function FeaturedProducts() {
   }, []);
 
   // Fetch products từ API khi component mount
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        const res = await fetch("/api/products");
-        if (!res.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await res.json();
-        // Giả sử API trả về dữ liệu theo cấu trúc: { data: [...] }
-        setProducts(data.data || data);
-      } catch (err: any) {
-        console.error("Error fetching products:", err);
-        setError("Error fetching products");
-      } finally {
-        setLoading(false);
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchProducts() {
+  //     try {
+  //       const res = await fetch("/api/products");
+  //       if (!res.ok) {
+  //         throw new Error("Failed to fetch products");
+  //       }
+  //       const data = await res.json();
+  //       setProducts(data.data || data);
+  //     } catch (err: any) {
+  //       console.error("Error fetching products:", err);
+  //       setError("Error fetching products");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
 
-    fetchProducts();
-  }, []);
+  //   fetchProducts();
+  // }, []);
 
-  if (loading) {
-    return <p className="text-center text-gray-500">Loading products...</p>;
-  }
+  // if (loading) {
+  //   return <p className="text-center text-gray-500">Loading products...</p>;
+  // }
 
-  if (error) {
-    return <p className="text-center text-red-500">{error}</p>;
-  }
+  // if (error) {
+  //   return <p className="text-center text-red-500">{error}</p>;
+  // }
 
   return (
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">

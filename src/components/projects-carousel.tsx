@@ -5,32 +5,56 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { IProject } from "@/utils/interface";
+// Sample projects data
+const projects = [
+  {
+    id: 1,
+    title: "Dự án trồng rừng Tây Nguyên",
+    description:
+      "Dự án trồng 10,000 cây xanh tại khu vực Tây Nguyên, góp phần phục hồi hệ sinh thái và chống biến đổi khí hậu.",
+    image: "/images/project-1.jpg",
+  },
+  {
+    id: 2,
+    title: "Hệ thống xử lý nước thải sinh học",
+    description:
+      "Thiết kế và xây dựng hệ thống xử lý nước thải sinh học cho khu công nghiệp, giúp giảm thiểu ô nhiễm môi trường.",
+    image: "/images/project-2.jpg",
+  },
+  {
+    id: 3,
+    title: "Chương trình tái chế rác thải nhựa",
+    description:
+      "Triển khai chương trình thu gom và tái chế rác thải nhựa tại các trường học, nâng cao ý thức bảo vệ môi trường.",
+    image: "/images/project-3.jpg",
+  },
+]
 
 export default function ProjectsCarousel() {
-  const [projects, setProjects] = useState<IProject[]>([]);
+  // const [projects, setProjects] = useState<IProject[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const slideRef = useRef<HTMLDivElement>(null);
 
   // Fetch projects từ API khi component mount
-  useEffect(() => {
-    async function fetchProjects() {
-      try {
-        const res = await fetch("/api/projects");
-        if (!res.ok) {
-          throw new Error("Failed to fetch projects");
-        }
-        const data = await res.json();
-        console.log(data.data);
-        // Giả sử API trả về mảng projects hoặc một object chứa projects
-        setProjects(data.data || data);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    }
+  // useEffect(() => {
+  //   async function fetchProjects() {
+  //     try {
+  //       const res = await fetch("/api/projects");
+  //       if (!res.ok) {
+  //         throw new Error("Failed to fetch projects");
+  //       }
+  //       const data = await res.json();
+  //       console.log(data.data);
+  //       // Giả sử API trả về mảng projects hoặc một object chứa projects
+  //       setProjects(data.data || data);
+  //     } catch (error) {
+  //       console.error("Error fetching projects:", error);
+  //     }
+  //   }
 
-    fetchProjects();
-  }, []);
+  //   fetchProjects();
+  // }, []);
 
   // Hàm chuyển slide tiếp theo
   const nextSlide = useCallback(() => {
